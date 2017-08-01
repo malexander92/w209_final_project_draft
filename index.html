@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+	<style>
+
+	#wrapper {
+    margin-left:1%;
+    margin-right:1%;
+    width:1500px;
+	}
+
+	.left_background {
+		fill: #eee;
+		pointer-events: all;
+	}
+
+	.right_background {
+		fill: #eee;
+		pointer-events: all;
+	}
+
+	.map-layer {
+		fill: #fff;
+		stroke: #aaa;
+	}
+
+	text.hover-text{
+		font-size: 30px;
+		font-weight: 400;
+	}
+
+	#slider{
+		width: 1000px;
+		
+	
+		/*
+		position: absolute;
+		top: 700px;
+		left: 0;
+		*/
+	}
+
+	#slider p{
+		text-align: center;
+		font-family: Futura;
+		font-size: 12;
+	}
+
+	#slider input{
+		width:100%;
+	}
+	</style>
+	<body>
+		<div id="wrapper">
+			<div id="slider">
+					<p id="yearLabel">2001</p>
+					<input type="range" id="year" value="2001" min="2001" max="2016" step = "1" oninput="update(value, curCrimeType)" />
+			</div>
+
+			<div id="crime_category" >
+					<form name="crime">
+							<select id="opts" onchange="update(curYear,value)">
+									<option value="ARSON">ARSON</option>
+									<option value="ASSAULT">ASSAULT</option>
+									<option value="BATTERY">BATTERY</option>
+									<option value="BURGLARY">BURGLARY</option>
+									<option value="CONCEALED CARRY LICENSE VIOLATION">CONCEALED CARRY LICENSE VIOLATION</option>
+									<option value="CRIM SEXUAL ASSAULT">CRIM SEXUAL ASSAULT</option>
+									<option value="CRIMINAL DAMAGE">CRIMINAL DAMAGE</option>
+									<option value="CRIMINAL TRESPASS">CRIMINAL TRESPASS</option>
+									<option value="DECEPTIVE PRACTICE">DECEPTIVE PRACTICE</option>
+									<option value="DOMESTIC VIOLENCE">DOMESTIC VIOLENCE</option>
+									<option value="GAMBLING">GAMBLING</option>
+									<option value="HOMICIDE">HOMICIDE</option>
+									<option value="HUMAN TRAFFICKING">HUMAN TRAFFICKING</option>
+									<option value="INTERFERENCE WITH PUBLIC OFFICER">INTERFERENCE WITH PUBLIC OFFICER</option>
+									<option value="INTIMIDATION">INTIMIDATION</option>
+									<option value="KIDNAPPING">KIDNAPPING</option>
+									<option value="LIQUOR LAW VIOLATION">LIQUOR LAW VIOLATION</option>
+									<option value="MOTOR VEHICLE THEFT">MOTOR VEHICLE THEFT</option>
+									<option value="NARCOTICS">NARCOTICS</option>
+									<option value="NON - CRIMINAL">NON - CRIMINAL</option>
+									<option value="NON-CRIMINAL">NON-CRIMINAL</option>
+									<option value="NON-CRIMINAL (SUBJECT SPECIFIED)">NON-CRIMINAL (SUBJECT SPECIFIED)</option>
+									<option value="OBSCENITY">OBSCENITY</option>
+									<option value="OFFENSE INVOLVING CHILDREN">OFFENSE INVOLVING CHILDREN</option>
+									<option value="OTHER NARCOTIC VIOLATION">OTHER NARCOTIC VIOLATION</option>
+									<option value="OTHER OFFENSE">OTHER OFFENSE</option>
+									<option value="PROSTITUTION">PROSTITUTION</option>
+									<option value="PUBLIC INDECENCY">PUBLIC INDECENCY</option>
+									<option value="PUBLIC PEACE VIOLATION">PUBLIC PEACE VIOLATION</option>
+									<option value="RITUALISM">RITUALISM</option>
+									<option value="ROBBERY">ROBBERY</option>
+									<option value="SEX OFFENSE">SEX OFFENSE</option>
+									<option value="STALKING">STALKING</option>
+									<option value="THEFT">THEFT</option>
+									<option value="WEAPONS VIOLATION">WEAPONS VIOLATION</option>
+							</select>
+					</form>
+			</div>
+
+			<svg id = 'svgLeft' position = 'absolute'></svg>
+			<svg id = 'svgRight' position = 'absolute'></svg>
+
+			<script src="https://d3js.org/d3.v3.min.js"></script>
+			<script type="text/javascript" src="./js/main.js"></script>
+		</div>
+	</body>
+</html>
