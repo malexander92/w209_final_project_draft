@@ -8,11 +8,11 @@ var centered_right
 
 // create the initial color scale for the maps
 var colorLeft = d3.scale.linear()
-	.domain([1, 63])
+	.domain([0, 20])
 	.range(["white","red"])
 
 var colorRight = d3.scale.log()
-	.domain([0.1, 500])
+	.domain([0.1, 150])
 	.range(["white","blue"])
 
 // set projection to use for the maps (centered on Chicago manually)
@@ -86,24 +86,24 @@ years_set = new Set()
 zip_set = new Set()
 crime_category_set = new Set()
 
-d3.csv('./data/Category_Surprise_Crime_agg.csv', crime_data_load, function(data) {
+d3.csv('./data/category_crime_agg_v3.csv', crime_data_load, function(data) {
 
 	crime_category_set.forEach(function(c) {
 
-		max_count = 0
+		max_rate = 0
 		
 		years_set.forEach(function(y) {
 
 			zip_set.forEach(function(z) {
 
-				if (crime_value_dict[y.concat(z).concat(c)] > max_count) {
+				if (crime_value_dict[y.concat(z).concat(c)] > max_rate) {
 
-					max_count = crime_value_dict[y.concat(z).concat(c)]
+					max_rate = crime_value_dict[y.concat(z).concat(c)]
 
 				}    
 			})    
 		})
-		crime_value_dict_max[c] = max_count
+		crime_value_dict_max[c] = max_rate
 	})
 })
 
@@ -112,13 +112,13 @@ function crime_data_load (d) {
 	d.Year = d.Year
 	d.zipcode = d.zipcode
 	d.PrimaryType = d.PrimaryType
-	d.Count = +d.Count
+	d.CrimesPerThousand = +d.CrimesPerThousand
 	d.SurpriseRatio = +d.SurpriseRatio
 
 	//filter out 2017 records bc the data is incomplete
 	if (d.Year != '2017') {
 
-	crime_value_dict[d.Year.concat(d.zipcode).concat(d.PrimaryType)] = d.Count
+	crime_value_dict[d.Year.concat(d.zipcode).concat(d.PrimaryType)] = d.CrimesPerThousand
 
 	surprise_value_dict[d.Year.concat(d.zipcode).concat(d.PrimaryType)] = d.SurpriseRatio
 
@@ -304,7 +304,7 @@ function update(year, type){
 	d3.select("#yearLabel").text(curYear)
 
 	// update the color scale to align with max crime rate for the category
-	colorLeft.domain([1, crime_value_dict_max[curCrimeType]])
+	colorLeft.domain([0, crime_value_dict_max[curCrimeType]])
 	
 	// re-call fill function on all zipcode area paths
 	leftMap.selectAll('path').style('fill', fillLeft)
