@@ -1,32 +1,35 @@
 // set initial variables
 var curYear = 2001
 var curCrimeType = 'ARSON'
-var width = 500
-var height = 700
+
+var width = 450
+var height = 500
+var padding = 0
+
 var centered_left
 var centered_right
 
 // create the initial color scale for the maps
-var colorLeft = d3.scale.linear()
+var colorLeft = d3.scaleLinear()
 	.domain([0, 20])
 	.range(["white","red"])
 
-var colorRight = d3.scale.log()
+var colorRight = d3.scaleLog()
 	.domain([0.1, 150])
 	.range(["white","blue"])
 
-// set projection to use for the maps (centered on Chicago manually)
-var projection = d3.geo.mercator()
+// set projection to use for the maps (centered on Chicago manually) (using the good ol' mercator)
+var projection = d3.geoMercator()
 	.scale(50000)
 	.center([-87.7, 41.825])
 	.translate([width / 2, height / 2])
 
 // initialize the path
-var path_left = d3.geo.path()
+var path_left = d3.geoPath()
 	.projection(projection)
 
 // initialize the path
-var path_right = d3.geo.path()
+var path_right = d3.geoPath()
 	.projection(projection)
 
 // create the svg canvas with height and width for left and right maps
@@ -38,6 +41,12 @@ var svg_right = d3.select('#svgRight')
 	.attr('width', width)
 	.attr('height', height)
 	.attr('x', width)
+
+// create the svg canvas with height and width for the bottom chart
+var svg_bottom = d3.select('#svgBottom')
+	.attr('width', width*3)
+	.attr('height', height*2)
+	.attr('y', height)
 
 // add left background rectangle
 svg_left.append('rect')
@@ -52,6 +61,12 @@ svg_right.append('rect')
 	.attr('width', width)
 	.attr('height', height)
 	.on('click', clickedRight)
+
+// add bottom background rectangle
+svg_bottom.append('rect')
+	.attr('class', 'bottom_background')
+	.attr('width', (width*3))
+	.attr('height', height/(1.61803398875))
 
 var g = svg_left.append('g')
 
@@ -310,4 +325,82 @@ function update(year, type){
 	leftMap.selectAll('path').style('fill', fillLeft)
 	rightMap.selectAll('path').style('fill', fillRight)
 
+}
+
+
+var lineMargin = 20
+var gLine = svg_bottom.append('g').attr("transform", "translate(" + lineMargin + "," + lineMargin + ")")
+var parseTime = d3.timeParse("%Y");
+
+
+var line_x = d3.scaleTime().range([0, (width*2)-lineMargin])
+var line_y = d3.scaleLinear().range([height/(1.61803398875) - lineMargin, 0])
+var category_z = d3.scaleOrdinal(d3.schemeCategory20)
+
+var line = d3.line()
+    .curve(d3.curveBasis)
+    .x(function(d) { return line_x(d.date); })
+    .y(function(d) { return line_y(d.crimeRate); })
+    
+
+
+d3.csv('./data/citywide_crime_test.csv', type, function(error, data) {
+  if (error) throw error;
+
+  var crimeTypes = data.columns.slice(1).map(function(id) {
+    return {
+      id: id,
+      values: data.map(function(d) {
+        return {date: d.date, crimeRate: d[id]};
+      })
+    };
+  });
+
+  line_x.domain(d3.extent(data, function(d) { return d.date; }));
+
+  line_y.domain([
+    d3.min(crimeTypes, function(c) { return d3.min(c.values, function(d) { return d.crimeRate; }); }),
+    d3.max(crimeTypes, function(c) { return d3.max(c.values, function(d) { return d.crimeRate; }); })
+  ]);
+
+  category_z.domain(crimeTypes.map(function(c) { return c.id; }));
+
+  gLine.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + (height/(1.61803398875) - lineMargin) + ")")
+      .call(d3.axisBottom(line_x));
+
+  gLine.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(line_y))
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.71em")
+      .attr("fill", "#000")
+      .text("Crime Rate per Thousand People");
+
+  var crimeType = gLine.selectAll(".crimeType")
+    .data(crimeTypes)
+    .enter().append("g")
+      .attr("class", "crimeType");
+
+  crimeType.append("path")
+      .attr("class", "line")
+      .attr("d", function(d) { return line(d.values); })
+      .style("stroke", function(d) { return category_z(d.id); });
+
+  crimeType.append("text")
+      .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
+      .attr("transform", function(d) { return "translate(" + line_x(d.value.date) + "," + line_y(d.value.crimeRate) + ")"; })
+      .attr("x", 3)
+      .attr("dy", "0.35em")
+      .style("font", "10px sans-serif")
+      .text(function(d) { return d.id; });
+});
+
+function type(d, _, columns) {
+  d.date = parseTime(d.Year);
+  for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
+  return d;
 }
