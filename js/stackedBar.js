@@ -19,7 +19,7 @@ var x_bar = d3.scaleBand()
 var y_bar = d3.scaleLinear()
     .rangeRound([height, 0]);
 
-d3.csv('./data/crime_bar_t.csv', function(d, i, columns) {
+d3.csv('./data/crime_bar_test.csv', function(d, i, columns) {
   for (i = 1, t = 0; i < columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
   d.total = t;
   return d;
