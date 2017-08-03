@@ -1,22 +1,23 @@
 // set initial variables
 var curYear = 2001
-var curCrimeType = 'ARSON'
+var curCrimeType = 'TOTAL CRIME'
 
-var width = 450
-var height = 500
-var padding = 0
+var	margin = {top: 0, right: 0, bottom: 0, left: 0}
+var width = 450 - margin.left - margin.right
+var height = 500 - margin.top - margin.bottom
+var map_padding = 5
 
 var centered_left
 var centered_right
 
 // create the initial color scale for the maps
 var colorLeft = d3.scaleLinear()
-	.domain([0, 20])
-	.range(["white","red"])
+	.domain([0, 300])
+	.range(['white','red'])
 
 var colorRight = d3.scaleLog()
 	.domain([0.1, 150])
-	.range(["white","blue"])
+	.range(['white','blue'])
 
 // set projection to use for the maps (centered on Chicago manually) (using the good ol' mercator)
 var projection = d3.geoMercator()
@@ -32,21 +33,33 @@ var path_left = d3.geoPath()
 var path_right = d3.geoPath()
 	.projection(projection)
 
-// create the svg canvas with height and width for left and right maps
-var svg_left = d3.select('#svgLeft')
-	.attr('width', width)
-	.attr('height', height)
+// create the svg container for the viz
+var svg_container = d3.select('body')
+	.append('svg')
+		.attr('width', width*3 + margin.left + margin.right)
+		.attr('height', height*2 + margin.top + margin.bottom)
+		.attr('id', 'svg_container')
+	.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-var svg_right = d3.select('#svgRight')
-	.attr('width', width)
-	.attr('height', height)
-	.attr('x', width)
+// create the svg canvas with height and width for left and right maps
+var svg_left = d3.select('#svg_container')
+	.append('svg')
+		.attr('width', width)
+		.attr('height', height)
+
+var svg_right = d3.select('#svg_container')
+	.append('svg')
+		.attr('width', width)
+		.attr('height', height)
+		.attr('x', width + map_padding)
 
 // create the svg canvas with height and width for the bottom chart
-var svg_bottom = d3.select('#svgBottom')
-	.attr('width', width*3)
-	.attr('height', height*2)
-	.attr('y', height)
+var svg_bottom = d3.select('#svg_container')
+	.append('svg')
+		.attr('width', width*3)
+		.attr('height', height)
+		.attr('y', height)
 
 // add left background rectangle
 svg_left.append('rect')
@@ -220,7 +233,7 @@ function clickedLeft(d) {
 	// highlight the selected zipcode area -dont need right now but may want to add in
 	if (centered_left != null) {
 		d3.select(this).style('fill', function() {
-		//return d3.rgb(d3.select(this).style("fill")).brighter(1)
+		//return d3.rgb(d3.select(this).style('fill')).brighter(1)
 		return d3.rgb('#FFFF99')
 		})
 	}
@@ -251,7 +264,7 @@ function clickedRight(d) {
 	// highlight the selected zipcode area
 	if (centered_right != null) {
 		d3.select(this).style('fill', function() {
-		//return d3.rgb(d3.select(this).style("fill")).brighter(1)
+		//return d3.rgb(d3.select(this).style('fill')).brighter(1)
 		return d3.rgb('#FFFF99')
 		})
 	}
@@ -267,7 +280,7 @@ function mouseoverLeft(d){
 
 	// highlight the mouseovered zipcode area (change to a different color?)
 	d3.select(this).style('fill', function() {
-		//return d3.rgb(d3.select(this).style("fill")).brighter(1)
+		//return d3.rgb(d3.select(this).style('fill')).brighter(1)
 		return d3.rgb('#FFFF99')
 	})
 
@@ -280,7 +293,7 @@ function mouseoverRight(d){
 
 	// highlight the mouseovered zipcode area (change to a different color?)
 	d3.select(this).style('fill', function() {
-		//return d3.rgb(d3.select(this).style("fill")).brighter(1)
+		//return d3.rgb(d3.select(this).style('fill')).brighter(1)
 		return d3.rgb('#FFFF99')
 	})
 
@@ -316,7 +329,7 @@ function update(year, type){
 	curCrimeType = type
 
 	// update label on slider
-	d3.select("#yearLabel").text(curYear)
+	d3.select('#yearLabel').text(curYear)
 
 	// update the color scale to align with max crime rate for the category
 	colorLeft.domain([0, crime_value_dict_max[curCrimeType]])
@@ -328,19 +341,19 @@ function update(year, type){
 }
 
 
-var lineMargin = 20
-var gLine = svg_bottom.append('g').attr("transform", "translate(" + lineMargin + "," + lineMargin + ")")
-var parseTime = d3.timeParse("%Y");
+var	lineMargin = {top: 30, right: 0, bottom: 0, left: 30}
+var gLine = svg_bottom.append('g').attr('transform', 'translate(' + lineMargin.left + ',' + lineMargin.top + ')')
+var parseTime = d3.timeParse('%Y')
 
 
-var line_x = d3.scaleTime().range([0, (width*2)-lineMargin])
-var line_y = d3.scaleLinear().range([height/(1.61803398875) - lineMargin, 0])
+var line_x = d3.scaleTime().range([0, (width*2)-lineMargin.left+map_padding])
+var line_y = d3.scaleLinear().range([height/(1.61803398875) - lineMargin.top, 0])
 var category_z = d3.scaleOrdinal(d3.schemeCategory20)
 
 var line = d3.line()
     .curve(d3.curveBasis)
-    .x(function(d) { return line_x(d.date); })
-    .y(function(d) { return line_y(d.crimeRate); })
+    .x(function(d) { return line_x(d.date) })
+    .y(function(d) { return line_y(d.crimeRate) })
     
 
 
@@ -351,56 +364,58 @@ d3.csv('./data/citywide_crime_test.csv', type, function(error, data) {
     return {
       id: id,
       values: data.map(function(d) {
-        return {date: d.date, crimeRate: d[id]};
+        return {date: d.date, crimeRate: d[id]}
       })
     };
   });
 
-  line_x.domain(d3.extent(data, function(d) { return d.date; }));
+  line_x.domain(d3.extent(data, function(d) { return d.date }))
 
   line_y.domain([
-    d3.min(crimeTypes, function(c) { return d3.min(c.values, function(d) { return d.crimeRate; }); }),
-    d3.max(crimeTypes, function(c) { return d3.max(c.values, function(d) { return d.crimeRate; }); })
+    d3.min(crimeTypes, function(c) { return d3.min(c.values, function(d) { return d.crimeRate }) }),
+    d3.max(crimeTypes, function(c) { return d3.max(c.values, function(d) { return d.crimeRate }) })
   ]);
 
-  category_z.domain(crimeTypes.map(function(c) { return c.id; }));
+  category_z.domain(crimeTypes.map(function(c) { return c.id }))
 
-  gLine.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + (height/(1.61803398875) - lineMargin) + ")")
-      .call(d3.axisBottom(line_x));
+  gLine.append('g')
+      .attr('class', 'axis axis--x')
+      .attr('transform', 'translate(0,' + (height/(1.61803398875) - lineMargin.top) + ')')
+      .call(d3.axisBottom(line_x))
 
-  gLine.append("g")
-      .attr("class", "axis axis--y")
+  gLine.append('g')
+      .attr('class', 'axis axis--y')
       .call(d3.axisLeft(line_y))
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", "0.71em")
-      .attr("fill", "#000")
-      .text("Crime Rate per Thousand People");
+    .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', -30)
+      .attr('x', -40)
+      .attr('dy', '0.71em')
+      .attr('fill', '#000')
+      .text('Crime Rate per Thousand People')
+      	.style('font', '12px sans-serif')
 
-  var crimeType = gLine.selectAll(".crimeType")
+  var crimeType = gLine.selectAll('.crimeType')
     .data(crimeTypes)
-    .enter().append("g")
-      .attr("class", "crimeType");
+    .enter().append('g')
+      .attr('class', 'crimeType')
 
-  crimeType.append("path")
-      .attr("class", "line")
-      .attr("d", function(d) { return line(d.values); })
-      .style("stroke", function(d) { return category_z(d.id); });
+  crimeType.append('path')
+      .attr('class', 'line')
+      .attr('d', function(d) { return line(d.values); })
+      .style('stroke', function(d) { return category_z(d.id) })
 
-  crimeType.append("text")
-      .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
-      .attr("transform", function(d) { return "translate(" + line_x(d.value.date) + "," + line_y(d.value.crimeRate) + ")"; })
-      .attr("x", 3)
-      .attr("dy", "0.35em")
-      .style("font", "10px sans-serif")
-      .text(function(d) { return d.id; });
+  crimeType.append('text')
+      .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]} })
+      .attr('transform', function(d) { return 'translate(' + line_x(d.value.date) + ',' + line_y(d.value.crimeRate) + ')' })
+      .attr('x', 3)
+      .attr('dy', '0.35em')
+      .style('font', '10px sans-serif')
+      .text(function(d) { return d.id; })
 });
 
 function type(d, _, columns) {
-  d.date = parseTime(d.Year);
-  for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
-  return d;
+  d.date = parseTime(d.Year)
+  for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c]
+  return d
 }
