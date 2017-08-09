@@ -367,6 +367,4 @@ function update(year, type){
 	leftMap.selectAll('path').style('fill', fillLeft)
 	rightMap.selectAll('path').style('fill', fillRight)
 
-	updateBars()
-
 }

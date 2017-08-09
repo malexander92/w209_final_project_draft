@@ -115,12 +115,13 @@ function updateBars() {
       .attr('height', function(d) { return y_bar(d[0]) - y_bar(d[1]); })
       .attr('width', x_bar.bandwidth());
   })
-
+  
   svg_right_bar.selectAll('.axis').remove()
 
   svg_right_bar.append('g')
       .attr('class', 'axis')
       .attr('transform', 'translate(0,' + (height-barMarginBottom) + ')')
       .call(d3.axisBottom(x_bar));
+
 
 }
