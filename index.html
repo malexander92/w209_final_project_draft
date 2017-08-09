@@ -37,7 +37,12 @@
 	}
 
 	text.hover-text{
-		font-size: 30px;
+		font-size: 22px;
+		font-weight: 400;
+	}
+
+	text.maplabel-text{
+		font-size: 22px;
 		font-weight: 400;
 	}
 
@@ -47,27 +52,57 @@
 
 	#slider p{
 		text-align: center;
-		font-family: Futura;
-		font-size: 12;
+		font-family: arial;
+		font-size: 16px;
+	}
+
+	#slider span{
+		text-align: center;
+		font-family: arial;
+		font-size: 18px;
+		vertical-align: middle;
+    	padding:0px;
+    	margin:0px;
 	}
 
 	#slider input{
-		width:100%;
+		width:80%;
 	}
 
-	#wrapper {
-		/*font-size: 0;*/
+	#catLabel{
+		font-size: 20px;
+		font-family: arial;
+	}
+
+	#opts {
+		font-size: 16px;
+		font-family: arial;
+	}
+
+	#sliderLabel {
+		font-size: 20px;
+		font-family: arial;
+		vertical-align: middle;
+    	padding:0px;
+    	margin:0px;
+	}
+
+	#year {
+		vertical-align: middle;
+    	padding:0px;
+    	margin:0px;
 	}
 
 	</style>
 	<body>
 		<div id='slider'>
-				<p id='yearLabel'>2001</p>
+				<label id='sliderLabel' for='year'>Select Year:  </label>
 				<input type='range' id='year' value='2001' min='2001' max='2016' step = '1' oninput='update(value, curCrimeType)' />
+				<span id='yearLabel'>2001</span>
 		</div>
-
-		<div id='crime_category' >
+		<div id='crime_category'>
 				<form name='crime'>
+					<label id='catLabel' for='opts'>Select Crime Category:  </label>
 						<select id='opts' onchange='update(curYear,value)'>
 								<option value='TOTAL CRIME'>TOTAL CRIME</option>
 								<option value='ARSON'>ARSON</option>
@@ -108,7 +143,7 @@
 						</select>
 				</form>
 		</div>
-
+		<br></br>
 		<script src='https://d3js.org/d3.v4.min.js'></script>
 		<script type='text/javascript' src='./js/mainMaps.js'></script>
 		<script type='text/javascript' src='./js/lineChart.js'></script>

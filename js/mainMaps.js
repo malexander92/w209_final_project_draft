@@ -22,7 +22,7 @@ var colorRight = d3.scaleLog()
 // set projection to use for the maps (centered on Chicago manually) (using the good ol' mercator)
 var projection = d3.geoMercator()
 	.scale(50000)
-	.center([-87.7, 41.825])
+	.center([-87.7, 41.833])
 	.translate([width / 2, height / 2])
 
 // initialize the path
@@ -80,17 +80,41 @@ var leftMap = g.append('g')
 var rightMap = g2.append('g')
 	.classed('map-layer', true)
 
+var leftMapLabel = svg_left.append('text')
+	.classed('maplabel-text', true)
+	.attr('x', 225)
+	.attr('y', 20)
+	.attr('text-anchor', 'middle')
+	.text('Crime Rate')
+
+var rightMapLabel = svg_right.append('text')
+	.classed('maplabel-text', true)
+	.attr('x', 225)
+	.attr('y', 20)
+	.attr('text-anchor', 'middle')
+	.text('Surprise Ratio')
+
 // create left side hover text
-var hoverTextLeft = svg_left.append('text')
+var hoverTextZipLeft = svg_left.append('text')
 	.classed('hover-text', true)
-	.attr('x', 20)
-	.attr('y', 45)
+	.attr('x', 10)
+	.attr('y', 465)
+
+var hoverTextRateLeft = svg_left.append('text')
+	.classed('hover-text', true)
+	.attr('x', 10)
+	.attr('y', 490)
 
 // create right side hover text
-var hoverTextRight = svg_right.append('text')
+var hoverTextZipRight = svg_right.append('text')
 	.classed('hover-text', true)
-	.attr('x', 20)
-	.attr('y', 45)
+	.attr('x', 10)
+	.attr('y', 465)
+
+var hoverTextRateRight = svg_right.append('text')
+	.classed('hover-text', true)
+	.attr('x', 10)
+	.attr('y', 490)
 
 // create dictionary for values and load crime data into it
 crime_value_dict = {}
@@ -272,8 +296,14 @@ function mouseoverLeft(d){
 	})
 
 	// set mouseover label text
-	hoverTextLeft
-		.text(nameFn(d))
+	hoverTextZipLeft
+		.text('ZipCode: ' + nameFn(d))
+	hoverTextRateLeft
+		.text('Crime Rate: ' + crime_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)].toFixed(2) + ' per 1000 people')
+	hoverTextZipRight
+		.text('ZipCode: ' + nameFn(d))
+	hoverTextRateRight
+		.text('Surprise Ratio: ' + surprise_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)].toFixed(2))
 }
 
 function mouseoverRight(d){
@@ -285,8 +315,14 @@ function mouseoverRight(d){
 	})
 
 	// set mouseover label text
-	hoverTextRight
-		.text(nameFn(d))
+	hoverTextZipLeft
+		.text('ZipCode: ' + nameFn(d))
+	hoverTextRateLeft
+		.text('Crime Rate: ' + crime_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)].toFixed(2) + ' per 1000 people')
+	hoverTextZipRight
+		.text('ZipCode: ' + nameFn(d))
+	hoverTextRateRight
+		.text('Surprise Ratio: ' + surprise_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)].toFixed(2))
 }
 
 // functions for end of mouseover
@@ -296,7 +332,10 @@ function mouseoutLeft(d){
 	leftMap.selectAll('path').style('fill', fillLeft)
 
 	// mouseover label text
-	hoverTextLeft.text('')
+	hoverTextZipLeft.text('')
+	hoverTextRateLeft.text('')
+	hoverTextZipRight.text('')
+	hoverTextRateRight.text('')
 }
 
 function mouseoutRight(d){
@@ -305,7 +344,10 @@ function mouseoutRight(d){
 	rightMap.selectAll('path').style('fill', fillRight)
 
 	// mouseover label text
-	hoverTextRight.text('')
+	hoverTextZipLeft.text('')
+	hoverTextRateLeft.text('')
+	hoverTextZipRight.text('')
+	hoverTextRateRight.text('')
 }
 
 // update function for changing crime type or year
