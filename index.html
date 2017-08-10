@@ -28,7 +28,7 @@
 	}
 
 	.bar_background {
-		fill: #eee;
+		fill: #fff;
 	}
 
 	.map-layer {
@@ -97,7 +97,7 @@
 	<body>
 		<div id='slider'>
 				<label id='sliderLabel' for='year'>Select Year:  </label>
-				<input type='range' id='year' value='2001' min='2001' max='2016' step = '1' oninput='update(value, curCrimeType)' />
+				<input type='range' id='year' value='2001' min='2001' max='2016' step = '1' oninput='update(value, curCrimeType); updateBars();' />
 				<span id='yearLabel'>2001</span>
 		</div>
 		<div id='crime_category'>
