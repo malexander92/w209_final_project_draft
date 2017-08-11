@@ -220,7 +220,6 @@ function fillLeft(d){
 // function to get the fill value for the right map area given current year and crime type
 function fillRight(d){
 	if (surprise_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)] != null) {
-		console.log(surprise_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)])
 		return colorRight(surprise_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)])
 	}
 	else {
@@ -365,7 +364,6 @@ function update(year, type){
 	// update label on slider
 	d3.select('#yearLabel').text(curYear)
 
-
 	// update the color scale to align with max crime rate for the category
 	colorLeft
 			.domain(d3.range(0, Math.log(crime_value_dict_max[curCrimeType])))
@@ -375,5 +373,12 @@ function update(year, type){
 	// re-call fill function on all zipcode area paths
 	leftMap.selectAll('path').style('fill', fillLeft)
 	rightMap.selectAll('path').style('fill', fillRight)
+
+	// update the chart with the curCrimeType
+	// crimeTypesFiltered is a global variable defined at the lineChart_v2.js file
+
+	update_chart()
+
+
 
 }
