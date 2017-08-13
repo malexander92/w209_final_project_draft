@@ -9,16 +9,16 @@ var svg_bottom_left = d3.select('#svg_container')
 // add bottom background rectangle
 svg_bottom_left.append('rect')
   .attr('class', 'bottom_background')
-  .attr('width', (width))
-  .attr('height', height/(1.61803398875))
+  .attr('width', width)
+  .attr('height', height)
 
-var	lineMargin = {top: 30, right: 30, bottom: 0, left: 30}
+var	lineMargin = {top: 30, right: 30, bottom: 10, left: 30}
 var gLine = svg_bottom_left.append('g').attr('transform', 'translate(' + lineMargin.left + ',' + lineMargin.top + ')')
 var parseTime = d3.timeParse('%Y')
 
 
 var line_x = d3.scaleTime().range([0, (width)-(lineMargin.left+lineMargin.right+map_padding)])
-var line_y = d3.scaleLinear().range([height/(1.61803398875) - lineMargin.top, 0])
+var line_y = d3.scaleLinear().range([height - (lineMargin.top+lineMargin.bottom), 0])
 var category_z = d3.scaleOrdinal(d3.schemeCategory20)
 
 var line = d3.line()
@@ -55,8 +55,8 @@ category_z.domain(crimeTypes.map(function(c) { return c.id }))
 
 gLine.append('g')
     .attr('class', 'axis axis--x')
-    .attr('transform', 'translate(0,' + (height/(1.61803398875) - lineMargin.top) + ')')
-    .call(d3.axisBottom(line_x))
+    .attr('transform', 'translate(0 , ' + (height - lineMargin.top) + ')' )
+    .call(d3.axisTop(line_x))
 
 gLine.append('g')
     .attr('class', 'axis axis--y')
@@ -91,7 +91,7 @@ crimeType.append('text')
 
 });
 
-function update_chart(){
+function updateCrime(){
   d3.csv('./data/citywide_crime_test_v2.csv', type, function(error, data) {
   if (error) throw error;
   crimeTypes = data.columns.slice(1).map(function(id) {
@@ -107,7 +107,6 @@ function update_chart(){
                     return crimeType.id == curCrimeType;
                   })
 
-  console.log(crimeTypesFiltered[0])
   //line_x.domain(d3.extent(data, function(d) { return d.date }))
   line_y.domain([
     //d3.min(crimeTypesFiltered, function(c) { return d3.min(c.values, function(d) { return d.crimeRate }) }),

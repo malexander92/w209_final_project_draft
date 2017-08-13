@@ -39,17 +39,17 @@ var svg_container = d3.select('body')
 		.attr('width', width*3 + margin.left + margin.right)
 		.attr('height', height*2 + margin.top + margin.bottom)
 		.attr('id', 'svg_container')
-	.append('g')
+		.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
 // create the svg canvas with height and width for left and right maps
 var svg_left = d3.select('#svg_container')
-	.append('svg')
+		.append('svg')
 		.attr('width', width)
 		.attr('height', height)
 
 var svg_right = d3.select('#svg_container')
-	.append('svg')
+		.append('svg')
 		.attr('width', width)
 		.attr('height', height)
 		.attr('x', width + map_padding)
@@ -377,7 +377,8 @@ function update(year, type){
 	// update the chart with the curCrimeType
 	// crimeTypesFiltered is a global variable defined at the lineChart_v2.js file
 
-	update_chart()
+	updateCrime()
+  updateHeatMap()
 
 
 
