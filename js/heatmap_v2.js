@@ -24,7 +24,7 @@ var parseDate = d3.timeParse("%Y"),
 var x = d3.scaleBand().rangeRound([200,heatWidth]),
     y = d3.scaleBand().rangeRound([0,height-20]),
     z = d3.scaleQuantile()
-    	.domain([-1, 1])
+    	.domain([-1, 0, 1])
     	.range(d3.schemeRdBu[9])
 
 
@@ -51,6 +51,7 @@ var x = d3.scaleBand().rangeRound([200,heatWidth]),
           // Compute the scale domains.
           x.domain(surprises.map(function(d){return d.zipcode}))
           y.domain(surprises.map(function(d){return d.PrimaryType}))
+          z.domain([-1, 0, 1])
           // z.domain([0, d3.max(surprises, function(d) { return d.SurpriseRatio; })]);
 
 
@@ -63,7 +64,7 @@ var x = d3.scaleBand().rangeRound([200,heatWidth]),
 
             .attr("width", 8)
             .attr("height",8)
-            .style("fill", function(d) { return z(d.SurpriseRatio) });
+            .style("fill", function(d) { return z(-d.SurpriseRatio) });
 
           // Add an x-axis with label.
           svg_bottom_right.append("g")
@@ -140,7 +141,7 @@ function updateHeatMap(){
       // Compute the scale domains.
       x.domain(surprises.map(function(d){return d.zipcode}))
       y.domain(surprises.map(function(d){return d.PrimaryType}))
-      // z.domain([0, d3.max(surprises, function(d) { return d.SurpriseRatio; })]);
+      z.domain([-1, 0, 1])
 
     svg_bottom_right.selectAll(".tile").remove()
     svg_bottom_right.selectAll(".tile")
@@ -152,7 +153,7 @@ function updateHeatMap(){
 
         .attr("width", 8)
         .attr("height",8)
-        .style("fill", function(d) { return z(d.SurpriseRatio) })
+        .style("fill", function(d) { return z(-d.SurpriseRatio) })
         .on('mouseover', tmp)
   			.on('mouseout', tmp)
   			.on('click', tmp)
