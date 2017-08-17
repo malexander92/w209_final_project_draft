@@ -149,7 +149,7 @@
 
 
 		<center>
-			<h1>Chicago Crime Surprise Maps</h1>
+			<br></br>
 			<div id='slider'>
 					<label id='sliderLabel' for='year'>Select Year:  </label>
 					<input type='range' id='year' value='2001' min='2001' max='2016' step = '1' oninput='update(value, curCrimeType); updateBars();' />
@@ -199,33 +199,26 @@
 					</form>
 			</div>
 		</center>
-		<br></br>
 		<article>
 			<h2>Surprise Ratio Explained</h2>
 			<p>
 				<b>Surprise ratio</b> is a measure of how the data being analyzed deviates from prior expectations.
-				<br>
-				<br>
-				As its name indicates, surprise ratios allow us to quantify how <i>surprising</i> the data may be. Such surprising data can highlight areas that may require further analysis to gather an understanding of how prior expectations may have been misled. 
-				<br>
-				<br>
+				As its name indicates, surprise ratios allow us to quantify how <i>surprising</i> the data may be. Such surprising data can highlight areas that may require further analysis to gather an understanding of how prior expectations may have been misled.
 				The actual derived values vary based on initial expectations.
 			</p>
 
 			<h2>Chicago Crime Expectations & Surprise</h2>
 			<p>
 				For Chicago crime data, initial expectations where defined in accordance with the <b>population</b> within each zip code. We expected that zip codes with larger populations would have equally larger crime rates. We calculated our initial expectations by distributing crime rates across each zip code based on the percentage that it contributes to the city's total population.
-				<br>
-				<br>
 				Surprise is then calculated by measuring each zip code's deviation from its expected value. As indicated by the maps, data can deviate in either a positive or negative manner. 
 			</p>
 		</article>
 			<script src='https://d3js.org/d3.v4.min.js'></script>
 			<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 			<script type='text/javascript' src='./js/mainMaps_v3.js'></script>
-			<script type='text/javascript' src='./js/crimeChart.js'></script>
+			<script type='text/javascript' src='./js/crimeChart_realign.js'></script>
 			<script type='text/javascript' src='./js/stackedBar.js'></script>
-			<script type='text/javascript' src='./js/heatmap.js'></script>
+			<script type='text/javascript' src='./js/heatmap_realign.js'></script>
 
 	</body>
 </html>

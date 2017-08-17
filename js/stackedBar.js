@@ -55,12 +55,12 @@ d3.csv('./data/crime_bar_test.csv', function(d, i, columns) {
       .attr('y', function(d) { return y_bar(d[1]); })
       .attr('height', function(d) { return y_bar(d[0]) - y_bar(d[1]); })
       .attr('width', x_bar.bandwidth());
-
+  /*
   svg_right_bar.append('g')
       .attr('class', 'axis')
       .attr('transform', 'translate(0,' + (height-barMarginBottom) + ')')
       .call(d3.axisBottom(x_bar));
-
+  */
   var legend = svg_right_bar.append('g')
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10)
@@ -115,13 +115,13 @@ function updateBars() {
       .attr('height', function(d) { return y_bar(d[0]) - y_bar(d[1]); })
       .attr('width', x_bar.bandwidth());
   })
-  
+  /*
   svg_right_bar.selectAll('.axis').remove()
-
+  
   svg_right_bar.append('g')
       .attr('class', 'axis')
       .attr('transform', 'translate(0,' + (height-barMarginBottom) + ')')
-      .call(d3.axisBottom(x_bar));
-
+      .call(d3.axisBottom(x_bar))
+  */
 
 }
