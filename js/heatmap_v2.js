@@ -63,7 +63,7 @@ var x = d3.scaleBand().rangeRound([200,heatWidth]),
 
             .attr("width", 8)
             .attr("height",8)
-            .style("fill", function(d) { return z(d.SurpriseRatio) });
+            .style("fill", function(d) { return z(d.SurpriseRatio*-1) });
 
           // Add an x-axis with label.
           svg_bottom_right.append("g")
@@ -152,7 +152,7 @@ function updateHeatMap(){
 
         .attr("width", 8)
         .attr("height",8)
-        .style("fill", function(d) { return z(d.SurpriseRatio) })
+        .style("fill", function(d) { return z(d.SurpriseRatio*-1) })
         .on('mouseover', tmp)
   			.on('mouseout', tmp)
   			.on('click', tmp)
