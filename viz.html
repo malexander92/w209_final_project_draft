@@ -209,8 +209,14 @@
 
 			<h2>Chicago Crime Expectations & Surprise</h2>
 			<p>
-				For Chicago crime data, initial expectations where defined in accordance with the <b>population</b> within each zip code. We expected that zip codes with larger populations would have equally larger crime rates. We calculated our initial expectations by distributing crime rates across each zip code based on the percentage that it contributes to the city's total population.
-				Surprise is then calculated by measuring each zip code's deviation from its expected value. As indicated by the maps, data can deviate in either a positive or negative manner. 
+				For Chicago crime data, initial expectations where defined in accordance with the <b>changes in the crime rate</b> (crime occurance over population count) for each zip code.
+				<ul>
+					<li> We model crime as a Poisson Distribution Function (PDF) </li>
+						<li> We compare two consecutive years for a given crime in a given Zip code. </li>
+						<li> Specifically, we compare two PDFs and look for the p-value (probability) that they are the same distribution </li>
+						<li> We scale the p-value between -1 and 1; -1 being strong negative changes and 1 being strong positive (i.e. reduction) in crime rates </li>
+				</ul>
+				Zip codes where there has been a significant reduction in crime rate will be blue (surprise rate = -1) and conversely, Zip codes where there has been a signification increase in the crime rate will be red (suprise rate = 1).
 			</p>
 		</article>
 			<script src='https://d3js.org/d3.v4.min.js'></script>
