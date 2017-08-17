@@ -24,11 +24,11 @@ var parseDate = d3.timeParse("%Y"),
 var x = d3.scaleBand().rangeRound([0,heatWidth-150]),
     y = d3.scaleBand().rangeRound([0,height-20]),
     z = d3.scaleQuantile()
-    	.domain([0, 50])
-    	.range(d3.schemeBlues[4])
+    	.domain([-1, 1])
+    	.range(d3.schemeRdBu[11])
 
 
-      d3.csv("./data/category_crime_agg_v3.csv", function(error, surprises) {
+      d3.csv("./data/category_crime_agg_v5.csv", function(error, surprises) {
           if (error) throw error;
 
           // Coerce the CSV data to the appropriate types.
@@ -47,13 +47,11 @@ var x = d3.scaleBand().rangeRound([0,heatWidth-150]),
                         return d1.PrimaryType.localeCompare(d2.PrimaryType) || d1.zipcode - d2.zipcode;
                       });
 
-          console.log(curYear)
-          console.log(surprises[0])
 
           // Compute the scale domains.
           x.domain(surprises.map(function(d){return d.zipcode}))
           y.domain(surprises.map(function(d){return d.PrimaryType}))
-          z.domain([0, d3.max(surprises, function(d) { return d.SurpriseRatio; })]);
+          // z.domain([0, d3.max(surprises, function(d) { return d.SurpriseRatio; })]);
 
 
         svg_bottom_right.selectAll(".tile")
@@ -99,7 +97,7 @@ var x = d3.scaleBand().rangeRound([0,heatWidth-150]),
   });
 
 function updateHeatMap(){
-  d3.csv("./data/category_crime_agg_v3.csv", function(error, surprises) {
+  d3.csv("./data/category_crime_agg_v5.csv", function(error, surprises) {
       if (error) throw error;
 
       // Coerce the CSV data to the appropriate types.
@@ -118,13 +116,11 @@ function updateHeatMap(){
                     return d1.PrimaryType.localeCompare(d2.PrimaryType) || d1.zipcode - d2.zipcode;
                   });
 
-      console.log(curYear)
-      console.log(surprises[0])
 
       // Compute the scale domains.
       x.domain(surprises.map(function(d){return d.zipcode}))
       y.domain(surprises.map(function(d){return d.PrimaryType}))
-      z.domain([0, d3.max(surprises, function(d) { return d.SurpriseRatio; })]);
+      // z.domain([0, d3.max(surprises, function(d) { return d.SurpriseRatio; })]);
 
     svg_bottom_right.selectAll(".tile").remove()
     svg_bottom_right.selectAll(".tile")

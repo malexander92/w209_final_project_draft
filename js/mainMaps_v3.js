@@ -16,8 +16,11 @@ var colorLeft = d3.scaleQuantile()
 	.range(d3.schemeYlOrRd[8])
 
 var colorRight = d3.scaleQuantile()
-	.domain([-30, 30])
-	.range(d3.schemeRdYlBu[8])
+	.domain([-1, 1])
+	//.range(d3.schemeRdYlBu[8])
+	//.range(colorbrewer.RdBu[11].reverse())
+	.range(d3.schemeRdBu[11])
+
 
 
 // set projection to use for the maps (centered on Chicago manually) (using the good ol' mercator)
@@ -129,7 +132,7 @@ crime_category_set = new Set()
 
 
 
-d3.csv('./data/category_crime_agg_v4.csv', crime_data_load, function(data) {
+d3.csv('./data/category_crime_agg_v5.csv', crime_data_load, function(data) {
 
 	crime_category_set.forEach(function(c) {
 
@@ -152,12 +155,12 @@ d3.csv('./data/category_crime_agg_v4.csv', crime_data_load, function(data) {
 })
 
 function crime_data_load (d) {
-
 	d.Year = d.Year
 	d.zipcode = d.zipcode
 	d.PrimaryType = d.PrimaryType
 	d.CrimesPerThousand = +d.CrimesPerThousand
 	d.SurpriseRatio = +d.SurpriseRatio
+
 
 	//filter out 2017 records bc the data is incomplete
 	if (d.Year != '2017') {
