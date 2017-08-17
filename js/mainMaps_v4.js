@@ -206,9 +206,9 @@ d3.json('./data/ZIP_Codes.geojson', function(error, mapData) {
 
 })
 
-var legendLeft_color_domain = [1, 2, 3, 4, 5, 6, 7, 8]
+var legendLeft_color_domain = [0, 43, 86, 129, 171, 214, 257, 300]
 
-var legendLeft_labels = ["1", "2", "3", "4", "5", "6", "7", "8"]
+var legendLeft_labels = ["Crime Rate", "Category Min", "", "", "", "", "Crime Rate", "Category Max"]
 
 var legendLeftMap = svg_left.selectAll("g.legend")
   .data(legendLeft_color_domain)
@@ -219,7 +219,7 @@ var legendLeftMap = svg_left.selectAll("g.legend")
 
 legendLeftMap.append("rect")
 .attr("x", 20)
-.attr("y", function(d, i){ return height*.75 - (i*ls_h) - 2*ls_h;})
+.attr("y", function(d, i){ return height*.9 - (i*ls_h) - 2*ls_h;})
 .attr("width", ls_w)
 .attr("height", ls_h)
 .style("fill", function(d, i) { return colorLeft(d); })
@@ -227,7 +227,7 @@ legendLeftMap.append("rect")
 
 legendLeftMap.append("text")
 .attr("x", 50)
-.attr("y", function(d, i){ return height*.75 - (i*ls_h) - ls_h - 4;})
+.attr("y", function(d, i){ return height*.9 - (i*ls_h) - ls_h - 4;})
 .text(function(d, i){ return legendLeft_labels[i]; });
 
 var legendRight_color_domain = [-1,-0.75,-0.50,-0.25,0,.25,0.50,0.75,1]
