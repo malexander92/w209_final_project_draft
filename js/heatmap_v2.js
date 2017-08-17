@@ -91,10 +91,30 @@ var x = d3.scaleBand().rangeRound([200,heatWidth]),
                 .attr("transform", "rotate(-90)")
                 .text("Value");
 
+            svg_bottom_right.append("text")
+                .attr("class", "console")
+                .attr("x", 200)
+                .attr("y",heatHeight-5)
+                .attr("text-anchor", "center")
+                //.text("Hello world");
+
+
+
 
               svg_bottom_right.selectAll(".y").exit().remove()
 
   });
+
+
+function tmp(d) {
+  conText = svg_bottom_right.select('.console')
+  //console.log(d)
+  conText.text("For: " + d.zipcode + ", Crime Type: " + d.PrimaryType + ", Surprise: " + d.SurpriseRatio)
+  // console.log(d.zipcode)
+  //console.log(d.SurpriseRatio)
+}
+
+
 
 function updateHeatMap(){
   d3.csv("./data/category_crime_agg_v5.csv", function(error, surprises) {
@@ -132,9 +152,13 @@ function updateHeatMap(){
 
         .attr("width", 8)
         .attr("height",8)
-        .style("fill", function(d) { return z(d.SurpriseRatio) });
+        .style("fill", function(d) { return z(d.SurpriseRatio) })
+        .on('mouseover', tmp)
+  			.on('mouseout', tmp)
+  			.on('click', tmp)
 
         svg_bottom_right.selectAll(".tile").exit().remove()
 
   });
+
 }
