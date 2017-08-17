@@ -25,7 +25,7 @@ var x = d3.scaleBand().rangeRound([200,heatWidth]),
     y = d3.scaleBand().rangeRound([0,height-20]),
     z = d3.scaleQuantile()
     	.domain([-1, 1])
-    	.range(d3.schemeRdBu[11])
+    	.range(d3.schemeRdBu[9])
 
 
       d3.csv("./data/category_crime_agg_v5.csv", function(error, surprises) {

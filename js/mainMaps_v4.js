@@ -19,7 +19,7 @@ var colorRight = d3.scaleQuantile()
 	.domain([-1, 1])
 	//.range(d3.schemeRdYlBu[8])
 	//.range(colorbrewer.RdBu[11].reverse())
-	.range(d3.schemeRdBu[11])
+	.range(d3.schemeRdBu[9])
 
 
 
@@ -230,9 +230,9 @@ legendLeftMap.append("text")
 .attr("y", function(d, i){ return height*.75 - (i*ls_h) - ls_h - 4;})
 .text(function(d, i){ return legendLeft_labels[i]; });
 
-var legendRight_color_domain = [1, 2, 3, 4, 5, 6, 7, 8]
+var legendRight_color_domain = [-1,-0.75,-0.50,-0.25,0,.25,0.50,0.75,1]
 
-var legendRight_labels = ["1", "2", "3", "4", "5", "6", "7", "8"]
+var legendRight_labels = ["-1 to -.75","-.75 to -.50","-.50 to -.25","-.25 to 0","0","0 to .25",".25 to .50",".50 to .75",".75 to 1"]
 
 var legendRightMap = svg_right.selectAll("g.legend")
   .data(legendRight_color_domain)
@@ -241,15 +241,15 @@ var legendRightMap = svg_right.selectAll("g.legend")
 
 legendRightMap.append("rect")
 .attr("x", 20)
-.attr("y", function(d, i){ return height*.75 - (i*ls_h) - 2*ls_h;})
+.attr("y", function(d, i){ return height*.9 - (i*ls_h) - 2*ls_h;})
 .attr("width", ls_w)
 .attr("height", ls_h)
-.style("fill", function(d, i) { return colorRight(d); })
+.style("fill", function(d, i) { return colorRight(d*-1); })
 .style("opacity", 0.8);
 
 legendRightMap.append("text")
 .attr("x", 50)
-.attr("y", function(d, i){ return height*.75 - (i*ls_h) - ls_h - 4;})
+.attr("y", function(d, i){ return height*.9 - (i*ls_h) - ls_h - 4;})
 .text(function(d, i){ return legendRight_labels[i]; });
 
 // function to get zip code label for each area
@@ -270,7 +270,7 @@ function fillLeft(d){
 // function to get the fill value for the right map area given current year and crime type
 function fillRight(d){
 	if (surprise_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)] != null) {
-		return colorRight(surprise_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)])
+		return colorRight(surprise_value_dict[String(curYear).concat(d.properties.zip).concat(curCrimeType)]*-1)
 	}
 	else {
 		return colorRight(0)
